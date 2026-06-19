@@ -1,0 +1,214 @@
+{
+  "name": "Email Summarizer",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3be75c9a-48b2-49fa-8a89-cbd0a75e8b77",
+      "name": "Email Trigger (IMAP)",
+      "credentials": {
+        "imap": {
+          "id": "EsLGje6GcAXpxEIY",
+          "name": "IMAP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8f07d02b-dfe4-49a0-862d-70d2053de059",
+              "name": "Subject",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "7976193a-c017-4509-871c-2d1717c37cf0",
+              "name": "subject",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "a62cc67d-23c5-4908-ad19-60c0438fafcb",
+              "name": "From",
+              "value": "={{ $json.from }}",
+              "type": "string"
+            },
+            {
+              "id": "48eb30e6-5492-40e9-9a2b-216f66a9e074",
+              "name": "Body",
+              "value": "={{ $json.textPlain }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "28b29f76-09a5-4d2e-83d8-ae6abf11e85c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an Email Assistant to summarize the email in single line and show in table form {{ $json.Body }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        416,
+        0
+      ],
+      "id": "6669b200-2336-49ad-83bf-ed905182ea4d",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        352,
+        208
+      ],
+      "id": "3cf4cd22-be64-4b39-88e3-608403b66510",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "3Z1Inz1SRBXRXDJ7",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "832c4f85-5a4c-41c5-b1d5-3dbe3608d76f",
+              "name": "Text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "95c3613f-cb6d-4b57-ac34-861b70066d03",
+              "name": "subject",
+              "value": "={{ $('Edit Fields').item.json.subject }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        768,
+        0
+      ],
+      "id": "1cceef3b-e47c-4805-a8e7-36192572aaef",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        976,
+        0
+      ],
+      "id": "b83b4dfc-23b2-4f75-8b81-bb0986436650",
+      "name": "Convert to File"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Email Trigger (IMAP)": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f07a93ac-08ec-4b5e-bdc6-8aa0afa02cd5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cc088f4944e1dba8116977e99fa6978c599ed05c3f921a37035d7a1e10da932e"
+  },
+  "nodeGroups": [],
+  "id": "Cb9ey0tqr07SbS51",
+  "tags": []
+}
