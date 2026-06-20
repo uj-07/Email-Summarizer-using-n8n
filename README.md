@@ -48,8 +48,7 @@ An automated email summarization workflow built with **n8n** that monitors your 
 
 ##  Workflow Screenshot
  
-![Email Summarizer Workflow](<img width="1600" height="900" alt="WhatsApp Image 2026-06-20 at 11 31 16 AM" src="https://github.com/user-attachments/assets/ac9e606d-a159-4a97-af3a-f8d0eceffbcf" />
-)
+![Email Summarizer Workflow](Untitled.png)
  
 > The workflow runs on n8n's visual editor with 5 connected nodes and a Groq Chat Model sub-node powering the AI chain.
  
